@@ -1,5 +1,6 @@
 import pymysql
 import os
+import logger
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -17,7 +18,7 @@ def get_cached_links(requested_link):
 	conn = connect()
 	cur = conn.cursor()
 	sql = 'SELECT CachedLinks FROM Links WHERE RequestedLinks = %s'
-	cur.execute(sql, f'{requested_link}')
+	cur.execute(sql, requested_link)
 	output = cur.fetchall()
 	conn.close()
 	
@@ -30,7 +31,7 @@ def insert_links(requested_link, debrider_link):
 	conn = connect()
 	cur = conn.cursor()
 	sql = 'INSERT INTO Links (RequestedLinks, CachedLinks) VALUES (%s, %s)'
-	cur.execute(sql, (f'{requested_link}', f'{debrider_link}'))
+	cur.execute(sql, requested_link, debrider_link)
 	conn.commit()
 	conn.close()
 	return 

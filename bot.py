@@ -13,8 +13,8 @@ client = Client(command_prefix='?', intents=intents, case_insensitive=False)
 
 @client.command()
 async def sync(ctx):
-    print("Sync command")
-    if ctx.author.id == 1149790824691945533:
+    if ctx.author.guild_permissions.administrator is True:
+        print("Sync command")
         command_synced =  await client.tree.sync()
         print(command_synced)
         await ctx.send('Command tree synced.')
