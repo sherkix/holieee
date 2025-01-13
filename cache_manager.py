@@ -15,23 +15,20 @@ def connect():
 	return conn
 	
 def get_cached_links(requested_link):
-	conn = connect()
-	cur = conn.cursor()
-	sql = 'SELECT CachedLinks FROM Links WHERE RequestedLinks = %s'
-	cur.execute(sql, requested_link)
-	output = cur.fetchall()
-	conn.close()
-	
+	with connect() as conn:
+		with conn.cursor() as cur:
+			sql = 'SELECT CachedLinks FROM Links WHERE RequestedLinks = %s'
+			cur.execute(sql, requested_link)
+			output = cur.fetchall()
 	if len(output) == 0:
 		return None
 	else:
 		return output[0][0] + ' (Cached)'
 
 def insert_links(requested_link, debrider_link):
-	conn = connect()
-	cur = conn.cursor()
-	sql = 'INSERT INTO Links (RequestedLinks, CachedLinks) VALUES (%s, %s)'
-	cur.execute(sql, requested_link, debrider_link)
-	conn.commit()
-	conn.close()
+	with connect() as conn:
+		with conn.cursor() as cur:
+			sql = 'INSERT INTO Links (RequestedLinks, CachedLinks) VALUES (%s, %s)'
+			cur.execute(sql, (requested_link, debrider_link))
+		conn.commit()
 	return 
