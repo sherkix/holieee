@@ -1,6 +1,7 @@
 from client import Client
 from dotenv import load_dotenv
 from debrid import *
+import cache_manager
 import discord
 import os
 import re
@@ -85,4 +86,5 @@ async def send_link(interaction: discord.Interaction, link: str):
             await interaction.followup.send(embed=embed)
 
 if __name__ == '__main__':
+    cache_manager.create_links_table()
     client.run(os.getenv('DISCORD_TOKEN'))
