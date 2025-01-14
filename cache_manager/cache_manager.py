@@ -6,7 +6,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class CacherError(Exception):
-	pass
+    def __init__(self, msg=''):
+        self.msg = msg
+        logger.log_error('CacherError: ' + msg)
+        
+    def __str__(self):
+        return self.msg
+	
 
 def connect():
 	try:
@@ -17,7 +23,6 @@ def connect():
 			db=os.getenv('DB_NAME'),
 		)
 	except pymysql.OperationalError as err:
-		logger.log_error(err)
 		raise CacherError(f"Can't connect to the database: {err}") from err
 	return conn
 
@@ -35,7 +40,6 @@ def create_links_table():
 			try:
 				cur.execute(sql)
 			except pymysql.OperationalError as err:
-				logger.log_error(err)
 				raise CacherError(f"Can't create table Links {err}") from err
 		conn.commit()
 	return
