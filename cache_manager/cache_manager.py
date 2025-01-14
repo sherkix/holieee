@@ -16,8 +16,9 @@ def connect():
 			password=os.getenv('DB_PW'),
 			db=os.getenv('DB_NAME'),
 		)
-	except pymysql.Error:
-		raise CacherError('Connection to the database failed, check if your MySQL server is running')
+	except pymysql.OperationalError as err:
+		logger.log_error(err)
+		raise CacherError(f"Can't connect to the database: {err}") from err
 	return conn
 
 def create_links_table():
@@ -33,8 +34,9 @@ def create_links_table():
                 )
 			try:
 				cur.execute(sql)
-			except pymysql.Error:
-				raise CacherError("Can't create Links table")
+			except pymysql.OperationalError as err:
+				logger.log_error(err)
+				raise CacherError(f"Can't create table Links {err}") from err
 		conn.commit()
 	return
 
