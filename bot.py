@@ -3,26 +3,26 @@ from dotenv import load_dotenv
 from debrid import *
 import cache_manager
 import discord
+from discord import app_commands
 import os
 import re
 
 load_dotenv()
 
-intents = discord.Intents.default()
-intents.message_content = True
-client = Client(command_prefix='?', intents=intents, case_insensitive=False)
+client = Client()
 
 @client.command()
 async def sync(ctx):
     if ctx.author.guild_permissions.administrator is True:
         print("Sync command")
-        command_synced =  await client.tree.sync()
+        command_synced = await client.tree.sync()
         print(command_synced)
         await ctx.send('Command tree synced.')
     else:
         await ctx.send('You must be the owner to use this command!')
-        
+
 @client.tree.command(name='botinfo', description='Bot Info')
+@app_commands.checks.cooldown(1, 5)
 async def bot_info(interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=False)
         embed = discord.Embed(
@@ -31,8 +31,9 @@ async def bot_info(interaction: discord.Interaction):
         )
         embed.add_field(name='Info', value='Version: 0.0.1\nDev: @innevato', inline=False)
         await interaction.followup.send(embed=embed)
-        
+
 @client.tree.command(name='check', description='Check if API endpoint is working')
+@app_commands.checks.cooldown(1, 5)
 async def check(interaction: discord.Interaction):
     await interaction.response.defer(ephemeral=False)
     if server_check() is True:
@@ -51,6 +52,7 @@ async def check(interaction: discord.Interaction):
         await interaction.followup.send(embed=embed)
 
 @client.tree.command(name='getlink', description='Get link from debrider')
+@app_commands.checks.cooldown(1, 5)
 async def send_link(interaction: discord.Interaction, link: str):
     await interaction.response.defer(ephemeral=False)
     if 'file.al' in link or 'pornhub.com' in link:
@@ -84,7 +86,13 @@ async def send_link(interaction: discord.Interaction, link: str):
         )
             embed.add_field(name='Error', value=debrider_link, inline=False)
             await interaction.followup.send(embed=embed)
-
+            
+@client.tree.error
+async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError):    
+    if isinstance(error, app_commands.CommandOnCooldown):
+        await interaction.response.send_message(f'Cooldown! Retry in {int(error.retry_after)}s', ephemeral=True)
+    else: raise error
+            
 if __name__ == '__main__':
     cache_manager.create_links_table()
     client.run(os.getenv('DISCORD_TOKEN'))

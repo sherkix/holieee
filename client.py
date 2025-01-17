@@ -2,9 +2,18 @@ import discord
 from discord.ext import commands
 
 class Client(commands.Bot):
+    def __init__(self):
+        super().__init__(command_prefix='?', intents=discord.Intents.all(), case_insensitive=False)
+        discord.Intents.message_content = True
+        self.synced = False;
+        
     async def on_ready(self):
-        print('The bot is ready')
+        await self.wait_until_ready()
+        if not self.synced: 
+            await self.tree.sync() 
+            self.synced = True
         app_info = await self.application_info()
         print(f'Id: {app_info.id}')
         print(f'Name: {app_info.name}')
+        print('The bot is ready')
         await self.change_presence(status=discord.Status.online, activity=discord.Game('Debriding asf'))
