@@ -3,7 +3,8 @@ import logging
 logging.basicConfig(filename="logs/holieee.log",
                     format='%(levelname)s %(asctime)s %(message)s',
                     level=logging.DEBUG,
-                    filemode='w')
+                    encoding='utf-8',
+                    filemode='a')
 
 logger = logging.getLogger('holieeelogging')
 
