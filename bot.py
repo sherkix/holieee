@@ -98,7 +98,7 @@ async def on_app_command_error(interaction: discord.Interaction, error: app_comm
 @client.event # * ctx commands cooldown
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
-        await ctx.reply(f'Cooldown! Retry in {int(error.retry_after)}s', delete_after=10, ephemeral=True)
+        await ctx.reply(f'Cooldown! Retry in {int(error.retry_after)}s', delete_after=10)
     else: raise error
     
 if __name__ == '__main__':
