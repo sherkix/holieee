@@ -78,8 +78,9 @@ async def send_link(interaction: discord.Interaction, link: str):
             title='Holieee',
             description='Your link is ready!',
             color=discord.Color.purple()
-        )
-            embed.add_field(name='Debrid Link', value=debrider_link, inline=False)
+        )   
+            for i, values in enumerate(debrider_link.split(',')):
+                embed.add_field(name=f'Debrid Link {i+1}', value=str(values), inline=False)
             await interaction.followup.send(embed=embed)
         else: # ! Error output
             embed = discord.Embed(

@@ -27,6 +27,7 @@ def server_check():
 		return False
 
 def add_link(requested_link):
+	l.clear()
 	requested_link = requested_link.strip()
 	cached_link = cache_manager.get_cached_links(requested_link) # * Get cached links in the db
 	if cached_link is not None:
