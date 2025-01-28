@@ -57,38 +57,39 @@ async def check(interaction: discord.Interaction):
 @app_commands.checks.cooldown(1, 5, key=lambda i: (i.guild_id, i.user.id))
 async def send_link(interaction: discord.Interaction, link: str):
     await interaction.response.defer(ephemeral=False)
-    if 'file.al' in link or 'pornhub.com' in link:
-        embed = discord.Embed(
-            title='Holieee',
-            color=discord.Color.red()
-        )
-        embed.add_field(name='Error', value='Host blacklistato!', inline=False)
-        await interaction.followup.send(embed=embed)
-    elif 'https' not in link or 'http' not in link:
-        embed = discord.Embed(
-            title='Holieee',
-            color=discord.Color.red()
-        )
-        embed.add_field(name='Error', value='Non hai inserito un link valido!', inline=False)
-        await interaction.followup.send(embed=embed)
-    else:
-        debrider_link = add_link(link)
-        if re.search('^https', debrider_link): # ? Match if https is found at the start of the string
+    with open('blacklist/blacklist.txt', 'r') as file:
+        if file.read() in link:
             embed = discord.Embed(
-            title='Holieee',
-            description='Your link is ready!',
-            color=discord.Color.purple()
-        )   
-            for i, values in enumerate(debrider_link.split(',')):
-                embed.add_field(name=f'Debrid Link {i+1}', value=str(values), inline=False)
+                title='Holieee',
+                color=discord.Color.red()
+            )
+            embed.add_field(name='Error', value='Host blacklistato', inline=False)
             await interaction.followup.send(embed=embed)
-        else: # ! Error output
+        elif 'https' not in link or 'http' not in link:
             embed = discord.Embed(
-            title='Holieee',
-            color=discord.Color.red()
-        )
-            embed.add_field(name='Error', value=debrider_link, inline=False)
+                title='Holieee',
+                color=discord.Color.red()
+            )
+            embed.add_field(name='Error', value='Non hai inserito un link valido!', inline=False)
             await interaction.followup.send(embed=embed)
+        else:
+            debrider_link = add_link(link)
+            if re.search('^https', debrider_link): # ? Match if https is found at the start of the string
+                embed = discord.Embed(
+                title='Holieee',
+                description='Your link is ready!',
+                color=discord.Color.purple()
+            )   
+                for i, values in enumerate(debrider_link.split(',')):
+                    embed.add_field(name=f'Debrid Link {i+1}', value=str(values), inline=False)
+                await interaction.followup.send(embed=embed)
+            else: # ! Error output
+                embed = discord.Embed(
+                title='Holieee',
+                color=discord.Color.red()
+            )
+                embed.add_field(name='Error', value=debrider_link, inline=False)
+                await interaction.followup.send(embed=embed)
             
 @client.tree.error # * slash commands cooldown
 async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError):    
