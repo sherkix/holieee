@@ -58,23 +58,23 @@ async def check(interaction: discord.Interaction):
 async def send_link(interaction: discord.Interaction, link: str):
     await interaction.response.defer(ephemeral=False)
     with open('blacklist/blacklist.txt', 'r') as file:
-        if file.read() in link:
+        if file.read() in link and os.path.getsize('blacklist/blacklist.txt') > 0:
             embed = discord.Embed(
                 title='Holieee',
                 color=discord.Color.red()
             )
             embed.add_field(name='Error', value='Host blacklistato', inline=False)
             await interaction.followup.send(embed=embed)
-        elif 'https' not in link or 'http' not in link:
+        elif not re.search('^http+[s]?', link):
             embed = discord.Embed(
                 title='Holieee',
                 color=discord.Color.red()
             )
-            embed.add_field(name='Error', value='Non hai inserito un link valido!', inline=False)
+            embed.add_field(name='Error', value='Non hai inserito un link valido', inline=False)
             await interaction.followup.send(embed=embed)
         else:
             debrider_link = add_link(link)
-            if re.search('^https', debrider_link): # ? Match if https is found at the start of the string
+            if re.search('^http+[s]?', debrider_link): # ? Match if https is found at the start of the string
                 embed = discord.Embed(
                 title='Holieee',
                 description='Your link is ready!',
