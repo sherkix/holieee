@@ -44,7 +44,7 @@ def create_links_table():
 		conn.commit()
 	return
 
-def get_cached_links(requested_link):
+def get_cached_links(requested_link: str) -> str | None:
 	with connect() as conn:
 		with conn.cursor() as cur:
 			sql = 'SELECT CachedLinks FROM Links WHERE RequestedLinks = %s'
@@ -55,7 +55,7 @@ def get_cached_links(requested_link):
 	else:
 		return output[0][0] + ' (Cached)'
 
-def insert_links(requested_link, debrider_link):
+def insert_links(requested_link: str, debrider_link: str):
 	with connect() as conn:
 		with conn.cursor() as cur:
 			sql = 'INSERT INTO Links (RequestedLinks, CachedLinks) VALUES (%s, %s)'

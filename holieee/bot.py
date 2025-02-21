@@ -1,10 +1,10 @@
 from client import Client
 from dotenv import load_dotenv
 from debrid import *
-import cache_manager
-import discord
 from discord import app_commands
 from discord.ext import commands
+from cache_manager import create_links_table
+import discord
 import os
 import re
 
@@ -21,7 +21,7 @@ async def sync(ctx):
         print(command_synced)
         await ctx.send('Command tree synced.')
     else:
-        await ctx.send('You must be the owner to use this command!')
+        await ctx.send('You must have admin privileges to use this command!')
 
 @client.tree.command(name='botinfo', description='Bot Info')
 @app_commands.checks.cooldown(1, 5, key=lambda i: (i.guild_id, i.user.id))
@@ -31,7 +31,7 @@ async def bot_info(interaction: discord.Interaction):
             title='Holieee',
             color=discord.Color.purple()
         )
-        embed.add_field(name='Info', value='Version: 0.0.1\nDev: @innevato', inline=False)
+        embed.add_field(name='Info', value='Version: 1.0\nDev: @innevato', inline=False)
         await interaction.followup.send(embed=embed)
 
 @client.tree.command(name='check', description='Check if API endpoint is working')
@@ -77,7 +77,7 @@ async def send_link(interaction: discord.Interaction, link: str):
             embed.add_field(name=f'Debrid Link {i+1}', value=str(values), inline=False)
         await interaction.followup.send(embed=embed)
 async def check_link(interaction: discord.Interaction, link: str):
-    with open('blacklist/blacklist.txt', 'r') as file:
+    with open('blacklist/blacklist.txt', 'r', encoding='utf-8') as file:
         if file.read() in link and os.path.getsize('blacklist/blacklist.txt') > 0:
             embed = discord.Embed(
                 title='Holieee',
@@ -109,5 +109,5 @@ async def on_command_error(ctx, error):
     else: raise error
     
 if __name__ == '__main__':
-    cache_manager.create_links_table()
+    create_links_table()
     client.run(os.getenv('DISCORD_TOKEN'))

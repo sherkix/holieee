@@ -19,14 +19,14 @@ headers = {
 	'Authorization': 'Bearer ' + debrid_api_token
 }
 
-def server_check():
+def server_check() -> bool:
 	response = requests.get('https://debrid-link.com', verify=True)
 	if response.status_code == 200:
 		return True
 	else:
 		return False
 
-def add_link(requested_link):
+def add_link(requested_link: str) -> str:
 	l.clear()
 	requested_link = requested_link.strip()
 	cached_link = cache_manager.get_cached_links(requested_link) # * Get cached links in the db
@@ -48,7 +48,7 @@ def add_link(requested_link):
 		return 'Errore SSL'
 	
 	if d['success'] is True:
-		if type(d['value']) is list:
+		if isinstance(d['value'], list):
 			for value in d['value']:
 				l.append(value['downloadUrl'])
 			output = str(l)[1:-1].replace("'", "") # * Slice from first '[' to last ']' and then remove single quotes
