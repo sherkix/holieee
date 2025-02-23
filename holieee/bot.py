@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from debrid import *
 from discord import app_commands
 from discord.ext import commands
-from cache_manager import create_links_table
+from cache_manager import create_links_table, routine
 import discord
 import os
 import re
@@ -109,5 +109,6 @@ async def on_command_error(ctx, error):
     else: raise error
     
 if __name__ == '__main__':
-    create_links_table()
     client.run(os.getenv('DISCORD_TOKEN'))
+    create_links_table()
+    routine()

@@ -62,3 +62,11 @@ def insert_links(requested_link: str, debrider_link: str):
 			cur.execute(sql, (requested_link, debrider_link))
 		conn.commit()
 	return
+
+def clear_cache():
+	with connect() as conn:
+		with conn.cursor() as cur:
+			sql = 'DELETE FROM Links WHERE Timestamp < (NOW() - INTERVAL 7 DAY)'
+			cur.execute(sql)
+		conn.commit()
+	return
