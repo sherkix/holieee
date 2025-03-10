@@ -73,8 +73,8 @@ async def send_link(interaction: discord.Interaction, link: str):
         description='Your link is ready!',
         color=discord.Color.purple()
     )   
-        for i, values in enumerate(debrider_link.split(',')):
-            embed.add_field(name=f'Debrid Link {i+1}', value=str(values), inline=False)
+        for i, value in enumerate(debrider_link.split(',')):
+            embed.add_field(name=f'Debrid Link {i+1}', value=value, inline=False)
         await interaction.followup.send(embed=embed)
 async def check_link(interaction: discord.Interaction, link: str):
     with open('blacklist/blacklist.txt', 'r', encoding='utf-8') as file:
