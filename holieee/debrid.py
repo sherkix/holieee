@@ -8,7 +8,6 @@ load_dotenv()
 endpoint = 'https://debrid-link.com/api/v2'
 debrid_api_token = os.getenv('DEBRID_TOKEN')
 timeout = 20
-l = []
 
 headers = { 
 	'Connection': 'keep-alive',
@@ -27,7 +26,7 @@ def server_check() -> bool:
 		return False
 
 def add_link(requested_link: str) -> str:
-	l.clear()
+	l = []
 	requested_link = requested_link.strip()
 	cached_link = cache_manager.get_cached_links(requested_link) # * Get cached links in the db
 	if cached_link is not None:
