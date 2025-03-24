@@ -15,7 +15,7 @@ client = Client()
 @client.command()
 @commands.cooldown(1, 600, commands.BucketType.user)
 async def sync(ctx):
-    if ctx.author.guild_permissions.administrator is True:
+    if ctx.author.guild_permissions.administrator:
         print("Sync command")
         command_synced = await client.tree.sync()
         print(command_synced)
@@ -38,7 +38,7 @@ async def bot_info(interaction: discord.Interaction):
 @app_commands.checks.cooldown(1, 5, key=lambda i: (i.guild_id, i.user.id))
 async def check(interaction: discord.Interaction):
     await interaction.response.defer(ephemeral=False)
-    if server_check() is True:
+    if server_check():
         embed = discord.Embed(
             title='Holieee',
             color=discord.Color.green()
