@@ -19,11 +19,11 @@ headers = {
 }
 
 def server_check() -> bool:
-	response = requests.get('https://debrid-link.com', verify=True)
-	if response.status_code == 200:
-		return True
-	else:
+	try:
+		requests.get('https://debrid-link.com', timeout=timeout, verify=True).raise_for_status()
+	except requests.exceptions.RequestException:
 		return False
+	return True
 
 def add_link(requested_link: str) -> str:
 	l = []

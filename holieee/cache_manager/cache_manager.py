@@ -1,4 +1,4 @@
-import pymysql.cursors
+import pymysql
 import os
 import logger
 from dotenv import load_dotenv
