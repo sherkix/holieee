@@ -32,6 +32,7 @@ def create_links_table():
 			sql = ('CREATE TABLE IF NOT EXISTS '
 					'Links'
 					'(LinkId int auto_increment,'
+					'UserId varchar(50),'
 					'RequestedLinks varchar(1000),'
 					'CachedLinks varchar(1000),'
 					'Timestamp timestamp default current_timestamp,' 
@@ -55,11 +56,11 @@ def get_cached_links(requested_link: str) -> str | None:
 	else:
 		return output[0][0] + ' (Cached)'
 
-def insert_links(requested_link: str, debrider_link: str):
+def insert_links(userid: str, requested_link: str, debrider_link: str):
 	with connect() as conn:
 		with conn.cursor() as cur:
-			sql = 'INSERT INTO Links (RequestedLinks, CachedLinks) VALUES (%s, %s)'
-			cur.execute(sql, (requested_link, debrider_link))
+			sql = 'INSERT INTO Links (UserId, RequestedLinks, CachedLinks) VALUES (%s, %s, %s)'
+			cur.execute(sql, (userid, requested_link, debrider_link))
 		conn.commit()
 	return
 

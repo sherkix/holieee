@@ -25,7 +25,7 @@ def server_check() -> bool:
 		return False
 	return True
 
-def add_link(requested_link: str) -> str:
+def add_link(userid: str, requested_link: str) -> str:
 	l = []
 	requested_link = requested_link.strip()
 	cached_link = cache_manager.get_cached_links(requested_link) # * Get cached links in the db
@@ -51,8 +51,8 @@ def add_link(requested_link: str) -> str:
 			for value in d['value']:
 				l.append(value['downloadUrl'])
 			output = str(l)[1:-1].replace("'", "") # * Slice from first '[' to last ']' and then remove single quotes
-			cache_manager.insert_links(requested_link, output)
+			cache_manager.insert_links(userid, requested_link, output)
 			return output
 		else:
-			cache_manager.insert_links(requested_link, d['value']['downloadUrl'])
+			cache_manager.insert_links(userid, requested_link, d['value']['downloadUrl'])
 			return d['value']['downloadUrl']

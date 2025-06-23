@@ -59,7 +59,7 @@ async def send_link(interaction: discord.Interaction, link: str):
     await interaction.response.defer(ephemeral=False)
     if await check_link(interaction, link):
         return
-    debrider_link = add_link(link)
+    debrider_link = add_link(interaction.user.id, link)
     if not re.search('^http+[s]?', debrider_link): # * Match if https is found at the start of the string
         embed = discord.Embed(
         title='Holieee',
