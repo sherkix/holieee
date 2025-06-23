@@ -25,7 +25,7 @@ def server_check() -> bool:
 		return False
 	return True
 
-def add_link(userid: str, requested_link: str) -> str:
+def add_link(userid: int, requested_link: str) -> str:
 	l = []
 	requested_link = requested_link.strip()
 	cached_link = cache_manager.get_cached_links(requested_link) # * Get cached links in the db
@@ -34,7 +34,7 @@ def add_link(userid: str, requested_link: str) -> str:
 		print('The request was cached')
 		return cached_link # * The function returns if the link is found in the db
 	payload = {'url': requested_link}
-	print(f'Requested url: {payload["url"]}')
+	print(f'Requested url: {payload["url"]} by {userid}')
 	try:
 		response = requests.post(url=endpoint + '/downloader/add', headers=headers, json=payload, timeout=timeout, verify=True)
 		response.raise_for_status()
